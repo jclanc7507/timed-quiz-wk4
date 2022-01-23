@@ -1,5 +1,3 @@
-(function(){
-
 // Functions
 function buildQuiz() {
     // variable to store the HTML output
@@ -28,26 +26,26 @@ function buildQuiz() {
             // add this question and its answers to the output
             output.push(
                 `<div class="question"> ${currentQuestion.question} </div>
-                <div class="answers"> ${answers.join('')} </div>`
+                <div class="answers"> ${answers.join("")} </div>`
             );
         }
     );
 
     // finally combine our output list into one string of HTML and put it on the page
-    quizContainer.innerHTML = output.join('');
+    quizContainer.innerHTML = output.join("");
 
     output.push(
         `<div class="slide">
             <div class="question"> ${currentQuestion.question} </div>
             <div class="answers"> ${answers.join("")} </div>
-        </div`
+        </div>`
     );
 };
     
 function showResults() {
     
     // gather answer containers from our quiz
-    const answerContainers = quizContainer.querySelectorAll('.answers');
+    const answerContainers = quizContainer.querySelectorAll(".answers");
 
     // keep track of user's answers
     let numCorrect = 0;
@@ -64,12 +62,12 @@ function showResults() {
             numCorrect++;
 
             // color the answers green
-            answerContainers[questionNumber].style.color = 'lightgreen';
+            answerContainers[questionNumber].style.color = "lightgreen";
         }
         // if answer is wrong or blank
         else{
             // color the answers red
-            answerContainers[questionNumber].style.color = 'red';
+            answerContainers[questionNumber].style.color = "red";
         }
     });
 
@@ -78,27 +76,28 @@ function showResults() {
 };
 
 function showSlide(n) {
-    slides[currentSlide].classList.remove('active-slide');
-    slides[n].classList.add('active-slide');
+    slides[currentSlide].classList.remove("active-slide");
+    slides[n].classList.add("active-slide");
     currentSlide = n;
     if(currentSlide === 0){
-        previousButton.style.display = 'none';
+        previousButton.style.display = "none";
     } else {
-        previousButton.style.display = 'inline-block';
+        previousButton.style.display = "inline-block";
     }
     if(currentSlide === slides.length-1){
-        nextButton.style.display = 'none';
-        submitButton.style.display = 'inline-block';
+        nextButton.style.display = "none";
+        submitButton.style.display = "inline-block";
     } else {
-        nextButton.style.display = 'inline-block';
-        submitButton.style.display = 'none';
+        nextButton.style.display = "inline-block";
+        submitButton.style.display = "none";
     } 
 };
 
 // Variables
-const quizContainer = document.getElementById('quiz');
-const answerContainer = document.getElementById('answer');
-const submitButton = document.getElementById('submit');
+const quizContainer = document.getElementById("quiz");
+// const answerContainer = document.getElementById('answer');
+const resultsContainer = document.getElementById("results");
+const submitButton = document.getElementById("submit");
 const myQuestions = [
     {
         question: "Who invented JavaScript?",
@@ -176,5 +175,3 @@ function showPreviousSlide() {
 submitButton.addEventListener("click", showResults);
 previousButton.addEventListener("click", showPreviousSlide);
 nextButton.addEventListener("click", showNextSlide);
-
-})();
