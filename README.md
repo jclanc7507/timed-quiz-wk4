@@ -62,3 +62,6 @@ https://jclanc7507.github.io/timed-quiz-wk4/
 
 ### Screenshot
 ![Screenshot of final product.](./assets/images/Screenshot.png)
+
+### Wireframe
+![Wireframe of initial product.](./assets/images/wireframe.png)
