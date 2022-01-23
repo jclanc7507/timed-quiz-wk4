@@ -1,177 +1,126 @@
-// Functions
-function buildQuiz() {
-    // variable to store the HTML output
-        const output = [];
-    
-    // for each question...
-    myQuestions.forEach(
-        (currentQuestion, questionNumber) => {
+const startButton = document.getElementById('start-btn')
+const nextButton = document.getElementById('next-btn')
+const questionContainerElement = document.getElementById
+('question-container')
+const questionElement = document.getElementById('question')
+const answerButtonsElement = document.getElementById
+('answer-buttons')
 
-            // variable to store the list of possible answers
-            const answers = [];
+let shuffledQuestions, currentQuestionIndex 
 
-            // and for each available answer...
-            for(letter in currentQuestion.answers){
+startButton.addEventListener('click', startGame)
+nextButton.addEventListener('click', () => {
+    currentQuestionIndex++
+    setNextQuestion()
+})
 
-                // ...add an HTML radio button
-                answers.push(
-                    `<label>
-                        <input type="radio" name="questions${questionNumber}" value="${letter}">
-                        ${letter} :
-                        ${currentQuestion.answers[letter]}
-                    </label>`
-                );
-            }
+function startGame() {
+    startButton.classList.add('hide')
+    shuffledQuestions = questions.sort(() => Math.random() -.5)
+    currentQuestionIndex = 0
+    questionContainerElement.classList.remove('hide')
+    setNextQuestion()
+}
 
-            // add this question and its answers to the output
-            output.push(
-                `<div class="question"> ${currentQuestion.question} </div>
-                <div class="answers"> ${answers.join("")} </div>`
-            );
+function setNextQuestion() {
+    resetState()
+    showQuestion(shuffledQuestions[currentQuestionIndex])
+}
+
+function showQuestion(question) {
+    questionElement.innerText = question.question
+    question.answers.forEach(answer => {
+        const button = document.createElement('button')
+        button.innerText = answer.text 
+        button.classList.add('btn')
+        if (answer.correct) {
+            button.dataset.correct = answer.correct
         }
-    );
+        button.addEventListener('click', selectAnswer)
+        answerButtonsElement.appendChild(button)
+    })
+}
 
-    // finally combine our output list into one string of HTML and put it on the page
-    quizContainer.innerHTML = output.join("");
-
-    output.push(
-        `<div class="slide">
-            <div class="question"> ${currentQuestion.question} </div>
-            <div class="answers"> ${answers.join("")} </div>
-        </div>`
-    );
-};
-    
-function showResults() {
-    
-    // gather answer containers from our quiz
-    const answerContainers = quizContainer.querySelectorAll(".answers");
-
-    // keep track of user's answers
-    let numCorrect = 0;
-
-    // for each question:
-    myQuestions.forEach( (currentQuestion, questionNumber) => {
-        // find selected answer
-        const answerContainer = answerContainers[questionNumber];
-        const selector = `input[name=question${questionNumber}]:checked`;
-        const userAnswer = (answerContainer.querySelector(selector) || {}).value;
-
-        if(userAnswer === currentQuestion.correctAnswer){
-            // add to the number of correct answers
-            numCorrect++;
-
-            // color the answers green
-            answerContainers[questionNumber].style.color = "lightgreen";
-        }
-        // if answer is wrong or blank
-        else{
-            // color the answers red
-            answerContainers[questionNumber].style.color = "red";
-        }
-    });
-
-    // show number of correct answers out of total
-    resultsContainer.innerHTML = `${numCorrect} out of ${myQuestions.length}`;
-};
-
-function showSlide(n) {
-    slides[currentSlide].classList.remove("active-slide");
-    slides[n].classList.add("active-slide");
-    currentSlide = n;
-    if(currentSlide === 0){
-        previousButton.style.display = "none";
-    } else {
-        previousButton.style.display = "inline-block";
+function resetState () {
+    clearStatusClass(document.body)
+    nextButton.classList.add('hide')
+    while (answerButtonsElement.firstChild) {
+        answerButtonsElement.removeChild
+        (answerButtonsElement.firstChild)
     }
-    if(currentSlide === slides.length-1){
-        nextButton.style.display = "none";
-        submitButton.style.display = "inline-block";
-    } else {
-        nextButton.style.display = "inline-block";
-        submitButton.style.display = "none";
-    } 
-};
+}
 
-// Variables
-const quizContainer = document.getElementById("quiz");
-// const answerContainer = document.getElementById('answer');
-const resultsContainer = document.getElementById("results");
-const submitButton = document.getElementById("submit");
-const myQuestions = [
+function selectAnswer(e) {
+    const selectedButton = e.target
+    const correct = selectedButton.dataset.correct
+    setStatusClass(document.body, correct)
+    Array.from(answerButtonsElement.children).forEach(button => {
+        setStatusClass(button, button.dataset.correct)
+    })
+    if (shuffledQuestions.length > currentQuestionIndex + 1) {
+        nextButton.classList.remove('hide')
+    } else {
+        startButton.innerText = 'Restart'
+        startButton.classList.remove('hide')
+    }
+}
+
+function setStatusClass(element, correct) {
+    clearStatusClass(element)
+    if (correct) {
+        element.classList.add('correct')
+    } else {
+        element.classList.add('wrong')
+    }
+}
+
+function clearStatusClass(element) {
+    element.classList.remove('correct')
+    element.classList.remove('wrong')
+}
+
+const questions = [
     {
         question: "Who invented JavaScript?",
-        answers: {
-            a: "Douglas Crockford",
-            b: "Sheryl Sandberg",
-            c: "Brendan Eich",
-            d: "Abraham Lincoln"
-        },
-        correctAnswer: "c"
+        answers: [
+            {text: "Douglas Crockford", correct: false},
+            {text: "Sheryl Sandberg", correct: false},
+            {text: "Brendan Eich", correct: true},
+            {text: "Abraham Lincoln", correct: false}
+        ] 
     },
     {
         question: "Which one of these is a JavaScript package manager?",
-        answers: {
-            a: "Angular",
-            b: "jQuery",
-            c: "RequireJS",
-            d: "ESLint"
-        },
-        correctAnswer: "d"
+        answers: [
+            {text: "Angular", correct: false},
+            {text: "jQuery", correct: false},
+            {text: "RequireJS", correct: false},
+            {text: "ESLint", correct: true}
+        ]        
     },
     {
         question: "What does HTML stand for?",
-        answers: {
-            a: "HyperText Markup Lines",
-            b: "HyperText Markup Language",
-            c: "HighText Markup Language",
-            d: "HyperText Management Language"
-        },
-        correctAnswer: "b"
+        answers: [
+            {text: "HyperText Markup Lines", correct: false},
+            {text: "HyperText Markup Language", correct: true},
+            {text: "HighText Markup Language", correct: false},
+            {text: "HyperText Management Language", correct: false}
+        ]        
     },
     {
         question: "Is JavaScript the same as Java?",
-        answers: {
-            a: "True",
-            b: "False"
-        },
-        correctAnswer: "b"
+        answers: [
+            {text: "True", correct: false},
+            {text: "False", correct: true}
+        ]        
     },
     {
         question: "What function does the all-Capitilzed part of the following code act as? 'VAR taskInProgressEl = document.querySelector();'",
-        answers: {
-            a: "function",
-            b: "selector",
-            c: "reference",
-            d: "class/id"
-        },
-        correctAnswer: "a"
+        answers: [
+            {text: "function", correct: true},
+            {text: "selector", correct: false},
+            {text: "reference", correct: false},
+            {text: "class/id", correct: false}
+        ]
     }
-];
-
-myQuestions.forEach( (currentQuestion, questionNumber) => {
-    // the code we want to run for each question goes here
-});
-
-// Kick things off
-buildQuiz();
-
-// Pagination
-const previousButton = document.getElementById("previous");
-const nextButton = document.getElementById("next");
-const slides = document.querySelectorAll(".slide");
-let currentSlide = 0;
-
-// Show the first slide
-showSlide(currentSlide);
-function showNextSlide() {
-    showSlide(currentSlide + 1);
-};
-function showPreviousSlide() {
-    showSlide(currentSlide - 1);
-};
-
-// Event Listeners. On submit, show results
-submitButton.addEventListener("click", showResults);
-previousButton.addEventListener("click", showPreviousSlide);
-nextButton.addEventListener("click", showNextSlide);
+]
