@@ -83,3 +83,11 @@ body.wrong {
 .hide {
     display: none;
 }
+
+header {
+    color: black;
+    padding: 30px;
+    margin: 30px;
+    display: flex;
+    flex-wrap: wrap;
+}

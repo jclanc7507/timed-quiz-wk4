@@ -5,10 +5,19 @@ const questionContainerElement = document.getElementById
 const questionElement = document.getElementById('question')
 const answerButtonsElement = document.getElementById
 ('answer-buttons')
+const isStorage = 'undifined' !== typeof localStorage;
+
+var i = 1;
+function startTimer () {
+    setInterval(function () {
+        $("#timer").html(i);
+        i++;
+    }, 1000);
+};
 
 let shuffledQuestions, currentQuestionIndex 
 
-startButton.addEventListener('click', startGame)
+startButton.addEventListener('click', startGame, startTimer)
 nextButton.addEventListener('click', () => {
     currentQuestionIndex++
     setNextQuestion()
@@ -41,6 +50,10 @@ function showQuestion(question) {
     })
 }
 
+if (isStorage && localStorage.getItem('high-scores')) {
+    elements.scores = localStorage.getItem('high-scores').split(',');
+}
+
 function resetState () {
     clearStatusClass(document.body)
     nextButton.classList.add('hide')
@@ -50,9 +63,24 @@ function resetState () {
     }
 }
 
+// var score = 0;
+//var highscore = +localStorage.getItem("highscore");
+//if (highscore !== null){
+//    if (score > highscore) {
+        //localStorage.setItem("highscore", score);
+    //}
+//}
+//else {
+    //localStorage.setItem("highscore", score);
+//}
+
+//function timer () {
+//}
+
 function selectAnswer(e) {
     const selectedButton = e.target
     const correct = selectedButton.dataset.correct
+    const wrong = selectedButton.dataset.wrong
     setStatusClass(document.body, correct)
     Array.from(answerButtonsElement.children).forEach(button => {
         setStatusClass(button, button.dataset.correct)
