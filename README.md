@@ -61,7 +61,7 @@ Repository contains a high-quality README file with description, screenshot, and
 https://jclanc7507.github.io/timed-quiz-wk4/
 
 ### Screenshot
-![Screenshot of final product.](./assets/images/Screenshot.png)
+![Screenshot of final product.](./assets/images/screenshot.png)
 
 ### Wireframe
 ![Wireframe of initial product.](./assets/images/wireframe.png)
